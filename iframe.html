@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script>
+        window.onload = (event) => {
+            window.addEventListener("message", function (event) {
+                document.querySelector("#message").innerText =
+                    typeof event.data === "string"
+                        ? event.data
+                        : JSON.stringify(event.data);
+            });
+
+            var button = document.querySelector("#sendMessage");
+            button.addEventListener("click", function () {
+                var message = document.querySelector("#messageText").value;
+                window.parent.postMessage(message, "*");
+            });
+            const SignalRURL = "https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/socket/signalr";
+            $.connection.hub.url = SignalRURL;
+            const noti = $.connection.notifyHub;
+
+
+            $.connection.hub.start().done(function () {
+                console.log("Hub Start " + $.connection.notifyHub.connection.id);
+                var _userId = localStorage.getItem("userId");
+                var _extension = localStorage.getItem("extension");
+                console.log("Hub Start _userId==>" + _userId);
+                console.log("Hub Start _extension==>" + _extension);
+                if (_userId === undefined || _userId === "null" || _userId === "") {
+                    //alert('user notfound, cannot subscribe agent event.')
+                    //$('#plAlertMsg').html("cannot subscribe agent event.");
+                    // setDangerMessage("cannot subscribe agent event.");
+                    // $("#panelLogin").show();
+                    // $("#panelPhone").hide();
+                    localStorage.setItem("TrackId", "");
+                    localStorage.setItem("ContactId", "");
+                    localStorage.setItem("OwnerId", "");
+                } else {
+                    //apiReSubscribeAgent(_userId, "", _extension);
+                }
+            });
+            $.connection.hub.disconnected(function () {
+                setTimeout(function () {
+                    $.connection.hub.start();
+                    console.log(
+                        "Hub Reconnect " + $.connection.notifyHub.connection.id
+                    );
+                }, 5000); // Restart connection after 5 seconds.
+            });
+        }
+
+        
+    </script>
+
+<script src="https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/widget/ex/js/jquery-2.2.4.min.js"></script>
+<script src="https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/widget/ex/js/jquery.signalR-2.1.2.js"></script>
+<script src="https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/socket/signalr/hubs"></script>
+</head>
+
+<body style="color: crimson;">
+    <h2>I'am iframe</h2>
+    <h3>The message from the parent appears below:</h3>
+    <div id="message">Please send some message from the input above.</div>
+
+    <input style="margin-top: 1em;" type="text" id="messageText" />
+    <button id="sendMessage">Send Message to Parent</button>
+
+</body>
+
+</html>
