@@ -19,9 +19,10 @@
             button.addEventListener("click", function () {
                 var message = document.querySelector("#messageText").value;
                 window.parent.postMessage(message, "*");
+                console.log('iframe postMessage '+message)
             });
-            const SignalRURL = "https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/socket/signalr";
-            $.connection.hub.url = SignalRURL;
+
+            $.connection.hub.url = "https://trbdigitalhubp01.terrabit.co.th:8187/gateway/cti-chubb/socket/signalr";
             const noti = $.connection.notifyHub;
 
 
