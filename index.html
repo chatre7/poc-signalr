@@ -19,8 +19,9 @@
 
             button.addEventListener("click", sendMessage);
 
-            window.addEventListener("messagex", onMessageHandler);
+            window.addEventListener("message", onMessageHandler);
             function onMessageHandler(event) {
+                console.log(event)
                 if (typeof event.data === "string") {
                     messageArea.innerText = event.data;
                 }
